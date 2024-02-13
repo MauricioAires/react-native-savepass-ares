@@ -45,19 +45,43 @@ export function RegisterLoginData() {
     formState: {
       errors
     }
-  } = useForm({
+  } = useForm<FormData>({
     resolver: yupResolver(schema)
   });
 
   async function handleRegister(formData: FormData) {
     const newLoginData = {
       id: String(uuid.v4()),
-      ...formData
+      service_name: formData.service_name,
+      email: formData.email,
+      password: formData.password,
     }
 
     const dataKey = '@savepass:logins';
 
-    // Save data on AsyncStorage and navigate to 'Home' screen
+    const currentDataAsyncStorage = await AsyncStorage.getItem(dataKey)
+
+    let formattedData = []
+
+    if(currentDataAsyncStorage){
+       formattedData = JSON.parse(currentDataAsyncStorage)
+    }
+
+    await AsyncStorage.setItem(dataKey, JSON.stringify([...formattedData, newLoginData]))
+
+
+    navigate("Home")
+  }
+
+
+  function getInputErrorMessage(inputName: keyof FormData): string{
+    const inputRef = errors[inputName]
+
+    if(inputRef){
+      return inputRef.message as string
+    }
+
+    return ""
   }
 
   return (
@@ -73,10 +97,7 @@ export function RegisterLoginData() {
             testID="service-name-input"
             title="Nome do serviço"
             name="service_name"
-            error={
-              // Replace here with real content
-              'Has error ? show error message'
-            }
+            error={getInputErrorMessage("service_name")}
             control={control}
             autoCapitalize="sentences"
             autoCorrect
@@ -85,10 +106,7 @@ export function RegisterLoginData() {
             testID="email-input"
             title="E-mail ou usuário"
             name="email"
-            error={
-              // Replace here with real content
-              'Has error ? show error message'
-            }
+            error={getInputErrorMessage("email")}
             control={control}
             autoCorrect={false}
             autoCapitalize="none"
@@ -98,10 +116,7 @@ export function RegisterLoginData() {
             testID="password-input"
             title="Senha"
             name="password"
-            error={
-              // Replace here with real content
-              'Has error ? show error message'
-            }
+            error={getInputErrorMessage("password")}
             control={control}
             secureTextEntry
           />

@@ -31,14 +31,26 @@ export function Home() {
   async function loadData() {
     const dataKey = '@savepass:logins';
     // Get asyncStorage data, use setSearchListData and setData
+
+   const response = await  AsyncStorage.getItem(dataKey)
+
+   if(response){
+    const formattedData = JSON.parse(response)
+
+    setData(formattedData)
+    setSearchListData(formattedData)
+   }
   }
 
   function handleFilterLoginData() {
-    // Filter results inside data, save with setSearchListData
+
+    const filteredResult = data.filter((login => login.service_name.includes(searchText)))
+
+    setSearchListData(filteredResult)
   }
 
   function handleChangeInputText(text: string) {
-    // Update searchText value
+   setSearchText(text)
   }
 
   useFocusEffect(useCallback(() => {
@@ -49,7 +61,7 @@ export function Home() {
     <>
       <Header
         user={{
-          name: 'Rocketseat',
+          name: 'Mauricio',
           avatar_url: 'https://i.ibb.co/ZmFHZDM/rocketseat.jpg'
         }}
       />
