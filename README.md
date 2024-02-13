@@ -15,6 +15,19 @@ Aplicativo de gerenciamento de senhas, controle todas as senhas em um único lug
 npm install
 ```
 
+## Comandos
+
+```bash
+# Install latest
+$ npm install expo@latest
+
+# Install a specific SDK version (for example, SDK 49)
+$ npm install expo@49
+
+# Atualizar dependências de acordo com a versão do expo
+$ npx expo install --fix
+
+```
 
 ## Contribuição
 
